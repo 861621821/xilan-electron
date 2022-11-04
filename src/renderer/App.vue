@@ -1,11 +1,12 @@
 <template>
-  <div id="app">
-    <!-- <Hello/> -->
-    <div>123</div>
-  </div>
+  <!-- <router-view/> -->
+  123
 </template>
 
 <script setup>
-// import Hello from './components/Hello.vue'
 
 </script>
+
+<style lang="scss" scoped>
+
+</style>

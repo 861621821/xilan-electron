@@ -1,5 +1,7 @@
 import {app, BrowserWindow, ipcMain, session, globalShortcut, Menu } from 'electron';
 import {join} from 'path';
+import createMessageWindow from './script/message';
+
 let mainWindow = null;
 app.whenReady().then(() => {
   createWindow();
@@ -21,6 +23,10 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+
+  setTimeout(()=>{
+    // createMessageWindow(800, 300)
+  }, 5000)
 });
 
 // app.on('window-all-closed', function () {
@@ -36,16 +42,20 @@ app.whenReady().then(() => {
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 800,
+    width: 1000,
     height: 600,
-    frame: false,
+    icon: join(__dirname, './static/logo.ico'),
+    // frame: false,
     resizable: false,
+    hasShadow: false,
+    // transparent: true,
     webPreferences: {
       preload: join(__dirname, 'preload.js'),
       nodeIntegration: false,
       contextIsolation: true,
     }
   });
+  // mainWindow.setSkipTaskbar(false)`
 
   if (process.env.NODE_ENV === 'development') {
     const rendererPort = process.argv[2];
@@ -61,10 +71,10 @@ function registerShortcut(){
   // 最大化：mainWindow.maximize();
   // 还原
   globalShortcut.register('CommandOrControl+Space', () => {
-    mainWindow.restore();
+    mainWindow.show();
   })
   // 最小化
   globalShortcut.register('Esc', () => {
-    mainWindow.minimize();
+    mainWindow.isFocused() && mainWindow.hide();
   })
 }

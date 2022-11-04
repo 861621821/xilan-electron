@@ -1,6 +1,7 @@
 {
   "name": "xilan-electron",
   "version": "0.1.0",
+  "author": "xilan",
   "description": "A minimal Electron + Vue application",
   "main": "build/main/main.js",
   "scripts": {
@@ -23,6 +24,7 @@
   },
   "dependencies": {
     "element-plus": "^2.2.19",
-    "vue": "^3.2.40"
+    "vue": "^3.2.40",
+    "vue-router": "^4.1.6"
   }
 }
