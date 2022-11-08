@@ -1,0 +1,44 @@
+{
+  "id": "3672028",
+  "name": "xilan",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "765558",
+      "name": "提醒",
+      "font_class": "shouye",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "169946",
+      "name": "web端",
+      "font_class": "webduan",
+      "unicode": "e6a6",
+      "unicode_decimal": 59046
+    },
+    {
+      "icon_id": "826062",
+      "name": "app1",
+      "font_class": "app1",
+      "unicode": "e6f1",
+      "unicode_decimal": 59121
+    },
+    {
+      "icon_id": "4424124",
+      "name": "小程序",
+      "font_class": "xiaochengxu",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "21127509",
+      "name": "黑马头条移动端",
+      "font_class": "shouji",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    }
+  ]
+}

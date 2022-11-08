@@ -1,6 +1,6 @@
 import {app, BrowserWindow, ipcMain, session, globalShortcut, Menu } from 'electron';
 import {join} from 'path';
-import createMessageWindow from './script/message';
+import createMessageWindow from './script/createMessage';
 
 let mainWindow = null;
 app.whenReady().then(() => {
@@ -25,8 +25,8 @@ app.whenReady().then(() => {
   });
 
   setTimeout(()=>{
-    // createMessageWindow(800, 300)
-  }, 5000)
+    createMessageWindow(400, 230)
+  }, 500)
 });
 
 // app.on('window-all-closed', function () {
