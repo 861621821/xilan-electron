@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import { join } from 'path';
 
-function createMessageWindow (width = 400, height = 220) {
+function createMessageWindow(width = 400, height = 220) {
   let mainWindow = new BrowserWindow({
     width,
     height,
@@ -21,7 +21,7 @@ function createMessageWindow (width = 400, height = 220) {
     mainWindow.loadURL(`http://localhost:${rendererPort}/message`);
   }
   else {
-    mainWindow.loadFile(join(app.getAppPath(), 'renderer', 'index.html'));
+    mainWindow.loadFile(join(app.getAppPath(), 'renderer', 'index.html/message'));
   }
 }
 
