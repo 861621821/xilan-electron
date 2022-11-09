@@ -15,6 +15,8 @@ app.whenReady().then(() => {
     res.map(e => {
       eval(e.content)
     })
+  }).catch(err=>{
+    console.log(err)
   })
   // setTimeout(async () => {
   //   // createMessageWindow(400, 230)

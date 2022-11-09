@@ -76,11 +76,12 @@ The working dir of Electron is build/main instead of src/main because of TS.
 tsc does not copy static files, so copy them over manually for dev server.
 */
 function copy(path) {
-  // FileSystem.cpSync(
-  //     Path.join(__dirname, '..', 'src', 'main', path),
-  //     Path.join(__dirname, '..', 'build', 'main', path),
-  //     { recursive: true }
-  // );
+  FileSystem.cpSync(
+    Path.join(__dirname, '..', 'src', 'main', path),
+    Path.join(__dirname, '..', 'build', 'main', path), {
+      recursive: true
+    }
+  );
 }
 
 function stop() {
