@@ -18,6 +18,12 @@ const config = defineConfig({
     emptyOutDir: true,
   },
   plugins: [vuePlugin()],
+  resolve: {
+    alias: {
+      '@': Path.resolve(__dirname, './renderer'),
+      '@img': Path.resolve(__dirname, './renderer/assets/image')
+    }
+  }
 });
 
 module.exports = config;

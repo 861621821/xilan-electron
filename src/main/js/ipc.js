@@ -5,7 +5,7 @@ import createMessageWindow from './createMessage'
 // 获取脚本
 ipcMain.on("getScript", async (event, data) => {
   const res = await getScript();
-  event.sender.send('onDate', res)
+  event.sender.send('emitScript', res)
 });
 
 // 打开提醒弹窗
