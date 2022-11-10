@@ -1,5 +1,6 @@
 [
   {
+    "scriptId": 1668060592561,
     "title": "test",
     "status": "",
     "content": "setTimeout(()=>{console.log(Date.now())}, 1000)",
@@ -10,9 +11,10 @@
     "temp5": ""
   },
   {
+    "scriptId": 1668060595561,
     "title": "工时",
     "status": "",
-    "content": "console.log(this);setInterval(()=>{const date = new Date();if(date.getDay() == 3 && date.getHours() >= 18){}}, 10000)",
+    "content": "setTimeout(()=>{global.createMessageWindow()}, 5000)",
     "temp1": false,
     "temp2": "",
     "temp3": "",

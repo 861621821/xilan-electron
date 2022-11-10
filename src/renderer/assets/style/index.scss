@@ -10,6 +10,10 @@ html, body, #app {
   font-family: tahoma,"microsoft yahei";
   line-height: 1.6;
 }
+#app{
+  padding: 10px;
+  box-sizing: border-box;
+}
 button {
   -webkit-app-region: no-drag;
 }

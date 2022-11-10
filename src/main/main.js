@@ -1,25 +1,17 @@
 import { app, BrowserWindow, ipcMain, session, globalShortcut, Menu } from 'electron';
 import { join } from 'path';
-import createMessageWindow from './js/createMessage';
-import './js/ipc';
-import { getScript } from './js/script'
 
 let mainWindow = null;
 app.whenReady().then(() => {
+  import('./js/ipc');
+  // import('./js/executeScript');
   // 创建窗口
   createWindow();
   // 注册快捷键
   registerShortcut();
-  // 读取并执行脚本
-  getScript().then(res => {
-    res.map(e => {
-      eval(e.content)
-    })
-  }).catch(err=>{
-    console.log(err)
-  })
+
   // setTimeout(async () => {
-  //   // createMessageWindow(400, 230)
+  //   createMessageWindow(400, 230)
   // }, 500)
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
@@ -56,7 +48,7 @@ function createWindow() {
     width: 1000,
     height: 600,
     icon: join(__dirname, './static/logo.ico'),
-    frame: false,
+    // frame: false,
     resizable: false,
     hasShadow: false,
     // transparent: true,
@@ -66,7 +58,7 @@ function createWindow() {
       contextIsolation: false,
     }
   });
-  // mainWindow.setSkipTaskbar(false)`
+  // mainWindow.setSkipTaskbar(false)
 
   if (process.env.NODE_ENV === 'development') {
     const rendererPort = process.argv[2];
