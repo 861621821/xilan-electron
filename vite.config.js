@@ -8,7 +8,6 @@ const { defineConfig } = require('vite');
  */
 const config = defineConfig({
   root: Path.join(__dirname, 'src', 'renderer'),
-  publicDir: 'public',
   server: {
     port: 8080,
   },
