@@ -19,8 +19,8 @@ const config = defineConfig({
   plugins: [vuePlugin()],
   resolve: {
     alias: {
-      '@': Path.resolve(__dirname, './renderer'),
-      '@img': Path.resolve(__dirname, './renderer/assets/image')
+      '@': Path.resolve(__dirname, './src/renderer'),
+      '@img': Path.resolve(__dirname, './src/renderer/assets/image')
     }
   }
 });
