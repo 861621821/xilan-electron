@@ -31,10 +31,11 @@
 
 <script setup>
 import { ref, reactive } from 'vue';
-import { useIpcRenderer } from '@vueuse/electron';
+// import { useIpcRenderer } from '@vueuse/electron';
+const { ipcRenderer } = require('electron');
 import { ElMessageBox } from 'element-plus';
 // import Edit from './edit.vue';
-const ipcRenderer = useIpcRenderer();
+// const ipcRenderer = useIpcRenderer();
 
 // 获取脚本数据
 const scriptData = ref([]);
@@ -44,20 +45,20 @@ ipcRenderer.on('emitScript', (event, data) => {
 });
 
 const isEdit = ref(false);
-const scriptObj = reactive({ title: '', content: '' });
-const hanldeAdd = () => {
-  ElMessageBox.prompt('', '标题', {
-    confirmButtonText: '编写脚本',
-    cancelButtonText: '取消',
-    customStyle: 'width: 250px',
-    buttonSize: 'small'
-  })
-    .then(({ value }) => {
-      scriptObj.title = value;
-      isEdit.value = true;
-    })
-    .catch(() => {});
-};
+// const scriptObj = reactive({ title: '', content: '' });
+// const hanldeAdd = () => {
+//   ElMessageBox.prompt('', '标题', {
+//     confirmButtonText: '编写脚本',
+//     cancelButtonText: '取消',
+//     customStyle: 'width: 250px',
+//     buttonSize: 'small'
+//   })
+//     .then(({ value }) => {
+//       scriptObj.title = value;
+//       isEdit.value = true;
+//     })
+//     .catch(() => {});
+// };
 
 const hanldeSave = () => {
   isEdit.value = false;

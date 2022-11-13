@@ -1,8 +1,8 @@
 <template>
   <div class="xl-msg-warp">
     <div class="xl-msg">
-      <div class="xl-msg-title"><i class="iconfont icon-shouye"></i>日期提醒</div>
-      <div class="xl-msg-body">今天是{{today}}除了主颜色外，您需要在不同的场景不同的场景中使用不同的不同的场景中使用不同的不同的场景中使用不同的场景颜色 (例如，危险的颜色表示危险的操作)</div>
+      <div class="xl-msg-title"><i class="iconfont icon-shouye"></i>{{msg.title}}</div>
+      <div class="xl-msg-body">{{msg.content}}</div>
       <div class="xl-msg-btn">
         <el-button type="primary">关闭</el-button>
         <el-button>确定</el-button>
@@ -13,6 +13,15 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useIpcRenderer } from '@vueuse/electron';
+// const ipcRenderer = useIpcRenderer();
+const { ipcRenderer } = require('electron');
+
+const msg = ref({});
+ipcRenderer.on('emitMsg', (event, data) => {
+  msg.value = data;
+  console.log('test', msg);
+});
 const today = ref(new Date().toLocaleString().split(' ')[0]);
 </script>
 
@@ -35,6 +44,7 @@ const today = ref(new Date().toLocaleString().split(' ')[0]);
     font-weight: 600;
     font-size: 20px;
     line-height: 2.2;
+    -webkit-app-region: drag;
     .iconfont {
       font-size: 20px;
       margin-right: 5px;

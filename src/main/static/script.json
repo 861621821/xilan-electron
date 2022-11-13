@@ -14,7 +14,7 @@
     "scriptId": 1668060595561,
     "title": "工时",
     "status": "",
-    "content": "setTimeout(()=>{global.createMessageWindow()}, 5000)",
+    "content": "setTimeout(()=>{global.createMessageWindow({title:'消息title',content:'填写工时时间到！填写工时时间到！填写工时时间到！填写工时时间到！填写工时时间到！',btn:[{btnText:'打开系统',handler:''},{btnText:'稍后',handler:''}]})}, 5000)",
     "temp1": false,
     "temp2": "",
     "temp3": "",

@@ -7,17 +7,26 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: {
+      title: '首页'
+    }
   },
   {
     path: '/script',
     name: 'Script',
-    component: Script
+    component: Script,
+    meta: {
+      title: '脚本'
+    }
   },
   {
     path: '/message',
     name: 'Message',
-    component: Message
+    component: Message,
+    meta: {
+      title: '消息'
+    }
   },
 ]
 

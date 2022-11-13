@@ -1,6 +1,5 @@
 <template>
   <div>
-    <el-button @click="router.push('/script')">Script</el-button>
   </div>
 </template>
 

@@ -1,18 +1,26 @@
 import { app, BrowserWindow, ipcMain, session, globalShortcut, Menu } from 'electron';
 import { join } from 'path';
+import { ipcMain } from 'electron';
+import { getScript } from './utils/index'
 
 let mainWindow = null;
 app.whenReady().then(() => {
-  import('./js/ipc');
+  // 注册通讯
+  import('./utils/ipc');
   // import('./js/executeScript');
   // 创建窗口
   createWindow();
   // 注册快捷键
   registerShortcut();
 
-  // setTimeout(async () => {
-  //   createMessageWindow(400, 230)
-  // }, 500)
+  // 读取并执行脚本
+  getScript().then(res => {
+    res.map(e => {
+      // eval(e.content)
+    })
+  }).catch(err => {
+    console.error(err)
+  })
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
@@ -40,25 +48,20 @@ app.whenReady().then(() => {
 //   console.log(message);
 // })
 
-// 隐藏菜单栏
-// Menu.setApplicationMenu(null);
-
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 600,
     icon: join(__dirname, './static/logo.ico'),
-    // frame: false,
+    frame: false,
     resizable: false,
     hasShadow: false,
-    // transparent: true,
     webPreferences: {
-      preload: join(__dirname, 'preload.js'),
+      // preload: join(__dirname, 'preload.js'),
       nodeIntegration: true, // 渲染进程使用Node API
       contextIsolation: false,
     }
   });
-  // mainWindow.setSkipTaskbar(false)
 
   if (process.env.NODE_ENV === 'development') {
     const rendererPort = process.argv[2];
@@ -82,3 +85,13 @@ function registerShortcut() {
     mainWindow.isFocused() && mainWindow.hide();
   })
 }
+
+// 最小化
+ipcMain.on("minimize", async (event, data) => {
+  mainWindow.minimize();
+});
+
+// 隐藏
+ipcMain.on("hide", async (event, data) => {
+  mainWindow.hide();
+});

@@ -1,16 +1,15 @@
 import { ipcMain } from 'electron';
-import { getScript } from './script'
-import createMessageWindow from './createMessage'
+import { getScript } from './index'
 
 // 获取脚本
-ipcMain.on("getScript", async (event, data) => {
+ipcMain.on('getScript', async (event, data) => {
   const res = await getScript();
   event.sender.send('emitScript', res)
 });
 
 // 打开提醒弹窗
-ipcMain.on("openMsgBox", async (event, data) => {
+ipcMain.on('openMsgBox', async (event, data) => {
   console.log('---:', data)
-  createMessageWindow();
+  global.createMessageWindow();
   // event.sender.send('openMsgBoxSuccess', res)
 });
