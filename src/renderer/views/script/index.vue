@@ -1,31 +1,41 @@
 <template>
   <div class="xl-script">
-    <template v-if="!isEdit">
-      <!-- <div class="script-btn">
-        <el-button type="primary" @click="hanldeAdd">新增脚本</el-button>
-      </div> -->
-      <div class="script-list">
-        <el-table :data="scriptData" stripe style="width: 100%">
-          <el-table-column prop="scriptId" label="ID" />
-          <el-table-column prop="title" label="标题" />
-          <el-table-column prop="status" label="状态" />
-          <el-table-column label="操作">
-            <template #default="{row}">
-              <el-button type="primary" link>启用</el-button>
-              <el-button type="primary" link>停用</el-button>
-              <el-button type="primary" link>删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </template>
-    <template v-else>
-      <Edit v-model="scriptObj.content"></Edit>
-      <div class="save-btn">
-        <el-button size="small" @click="isEdit = false">返回</el-button>
-        <el-button size="small" type="primary" @click="hanldeSave">保存</el-button>
-      </div>
-    </template>
+    <div class="script-btn">
+      <el-button type="primary" @click="dialogVisible = true">新增脚本</el-button>
+      <el-button type="primary" @click="handleRestart">重启应用</el-button>
+    </div>
+    <div class="script-list">
+      <el-table :data="scriptData" stripe style="width: 100%">
+        <el-table-column prop="id" label="ID" />
+        <el-table-column prop="title" label="标题" />
+        <el-table-column prop="status" label="状态">
+          <template #default="{row}">
+            {{row.status == 1 ? '启用' : '停用'}}
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template #default="{row}">
+            <el-button type="primary" link>启用</el-button>
+            <el-button type="primary" link>停用</el-button>
+            <el-button type="primary" link>删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <el-dialog v-model="dialogVisible" title="新增脚本" width="70%">
+      <el-form ref="form" :model="script" label-width="80px">
+        <el-form-item label="脚本名称">
+          <el-input v-model="script.title"></el-input>
+        </el-form-item>
+        <el-form-item label="脚本内容">
+          <el-input type="textarea" :rows="8" resize="none" v-model="script.content"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleSave">保存</el-button>
+          <el-button type="primary" plain @click="dialogVisible = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -33,8 +43,6 @@
 import { ref, reactive } from 'vue';
 // import { useIpcRenderer } from '@vueuse/electron';
 const { ipcRenderer } = require('electron');
-import { ElMessageBox } from 'element-plus';
-// import Edit from './edit.vue';
 // const ipcRenderer = useIpcRenderer();
 
 // 获取脚本数据
@@ -44,25 +52,15 @@ ipcRenderer.on('emitScript', (event, data) => {
   scriptData.value = data;
 });
 
-const isEdit = ref(false);
-// const scriptObj = reactive({ title: '', content: '' });
-// const hanldeAdd = () => {
-//   ElMessageBox.prompt('', '标题', {
-//     confirmButtonText: '编写脚本',
-//     cancelButtonText: '取消',
-//     customStyle: 'width: 250px',
-//     buttonSize: 'small'
-//   })
-//     .then(({ value }) => {
-//       scriptObj.title = value;
-//       isEdit.value = true;
-//     })
-//     .catch(() => {});
-// };
+const dialogVisible = ref(false);
+const script = reactive({ title: '', content: '' });
 
-const hanldeSave = () => {
-  isEdit.value = false;
+const handleSave = () => {
+  ipcRenderer.send('addScript', JSON.stringify(script)); // 向主进程通信
+  dialogVisible.value = false;
 };
+
+const handleRestart = () => {};
 </script>
 
 <style lang="scss" scoped>
@@ -70,6 +68,8 @@ const hanldeSave = () => {
   height: 100%;
   width: 100%;
   position: relative;
+  padding: 10px;
+  box-sizing: border-box;
 }
 .script-btn {
   margin-bottom: 10px;

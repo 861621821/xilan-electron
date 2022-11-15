@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, session, globalShortcut, Menu } from 'electron';
 import { join } from 'path';
 import { ipcMain } from 'electron';
-import { getScript } from './utils/index'
+import { getScript } from './utils/index';
 
 let mainWindow = null;
 app.whenReady().then(() => {
@@ -14,12 +14,9 @@ app.whenReady().then(() => {
   registerShortcut();
 
   // 读取并执行脚本
-  getScript().then(res => {
-    res.map(e => {
-      // eval(e.content)
-    })
-  }).catch(err => {
-    console.error(err)
+  const script = getScript('script', [])
+  script.map(e => {
+    eval(e.content)
   })
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {

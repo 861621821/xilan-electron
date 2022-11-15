@@ -3,6 +3,9 @@ import { join } from 'path';
 import { exec } from 'child_process';
 import { ipcMain } from 'electron';
 import fs from 'fs';
+import Store from 'electron-store';
+
+const store = new Store();
 
 export const readFile = (path) => {
   return new Promise((resolve, reject) => {
@@ -19,12 +22,6 @@ export const writeFile = (path, str) => {
       if (err) { reject('文件写入出错'); }
     });
   })
-}
-
-// 获取脚本
-export const getScript = async () => {
-  const res = await readFile('./build/main/static/script.json');
-  return JSON.parse(res)
 }
 
 export const createMessageWindow = (msg = {}, width = 450, height = 260) => {
@@ -53,9 +50,8 @@ export const createMessageWindow = (msg = {}, width = 450, height = 260) => {
     win.webContents.send('emitMsg', msg)
   })
 }
-// 注册到全局
-global.createMessageWindow = createMessageWindow;
 
+// 打开应用
 export const openApp = (path) => {
   let process = exec(path);
   process.error.on('data', data => {
@@ -68,3 +64,17 @@ export const openApp = (path) => {
     console.log(data)
   })
 }
+
+// 获取脚本
+export const getScript = () => {
+  return store.get('script', [])
+}
+// 添加脚本
+export const setScript = (script) => {
+  const res = store.get('script', []);
+  store.set('script', [...res, { ...script, id: Date.now(), status: 0 }]);
+}
+
+
+// 方法注册到全局
+global.createMessageWindow = createMessageWindow;

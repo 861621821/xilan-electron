@@ -70,7 +70,7 @@ const ipcRenderer = useIpcRenderer();
     flex-direction: column;
   }
   .title-bar {
-    -webkit-app-region: drag;
+    // -webkit-app-region: drag;
     height: 50px;
     display: flex;
     align-items: center;

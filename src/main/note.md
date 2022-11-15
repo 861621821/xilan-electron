@@ -2,3 +2,8 @@
 
 #### 全局方法
 + 创建提醒：createMessageWindow
+
+``` js
+const store = new Store();
+https://github.com/sindresorhus/electron-store
+```
