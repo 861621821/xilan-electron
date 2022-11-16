@@ -2,7 +2,7 @@
   <div class="xl-script">
     <div class="script-btn">
       <el-button type="primary" @click="dialogVisible = true">新增脚本</el-button>
-      <el-button type="primary" @click="handleRestart">重启应用</el-button>
+      <el-button type="danger" @click="ipcRenderer.send('relaunch');">重启应用</el-button>
     </div>
     <div class="script-list">
       <el-table :data="scriptData" stripe style="width: 100%">
@@ -59,20 +59,15 @@ const handleSave = () => {
   ipcRenderer.send('addScript', JSON.stringify(script)); // 向主进程通信
   dialogVisible.value = false;
 };
-
-const handleRestart = () => {};
 </script>
 
 <style lang="scss" scoped>
 .xl-script {
-  height: 100%;
-  width: 100%;
   position: relative;
-  padding: 10px;
-  box-sizing: border-box;
 }
 .script-btn {
   margin-bottom: 10px;
+  text-align: right;
 }
 .save-btn {
   position: absolute;

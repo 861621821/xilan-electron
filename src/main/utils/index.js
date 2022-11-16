@@ -24,6 +24,16 @@ export const writeFile = (path, str) => {
   })
 }
 
+// 获取md文件
+export const getMd = (fileName) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(`./build/main/static/${fileName}.md`, { flag: 'r', encoding: 'utf-8' }, (err, data) => {
+      if (err) { reject('文件读取出错'); }
+      resolve(data);
+    });
+  })
+}
+
 export const createMessageWindow = (msg = {}, width = 450, height = 260) => {
   let win = new BrowserWindow({
     width,
@@ -74,7 +84,6 @@ export const setScript = (script) => {
   const res = store.get('script', []);
   store.set('script', [...res, { ...script, id: Date.now(), status: 0 }]);
 }
-
 
 // 方法注册到全局
 global.createMessageWindow = createMessageWindow;

@@ -3,6 +3,14 @@ import { join } from 'path';
 import { ipcMain } from 'electron';
 import { getScript } from './utils/index';
 
+// 开机启动
+const ex = process.execPath
+app.setLoginItemSettings({
+  openAtLogin: true,
+  path: ex,
+  args: []
+})
+
 let mainWindow = null;
 app.whenReady().then(() => {
   // 注册通讯
@@ -14,7 +22,8 @@ app.whenReady().then(() => {
   registerShortcut();
 
   // 读取并执行脚本
-  const script = getScript('script', [])
+  const script = getScript('script', []);
+  console.log(script);
   script.map(e => {
     eval(e.content)
   })

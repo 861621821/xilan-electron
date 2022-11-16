@@ -15,7 +15,9 @@
           </div>
         </div>
         <el-scrollbar style="flex: 1">
-          <router-view />
+          <div class="selection">
+            <router-view />
+          </div>
         </el-scrollbar>
       </div>
     </template>
@@ -102,6 +104,16 @@ const ipcRenderer = useIpcRenderer();
       margin-left: 20px;
       cursor: pointer;
       -webkit-app-region: no-drag;
+    }
+  }
+  .selection {
+    height: 100%;
+    width: 100%;
+    & > div {
+      padding: 10px;
+      height: 100%;
+      width: 100%;
+      box-sizing: border-box;
     }
   }
 }
