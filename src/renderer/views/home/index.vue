@@ -12,23 +12,12 @@
 
 <script setup>
 import { ref } from 'vue';
-const hljs = require('highlight.js');
-const md = require('markdown-it')({
-  highlight: function (str, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      try {
-        return hljs.highlight(lang, str).value;
-      } catch (__) {}
-    }
-
-    return ''; // 使用额外的默认转义
-  }
-});
+const md = require('markdown-it')();
 const { ipcRenderer } = require('electron');
 
 // 获取记事本
 const noteStr = ref('');
-ipcRenderer.send('getMd', 'test'); // 向主进程通信
+ipcRenderer.send('getMd', 'note'); // 向主进程通信
 ipcRenderer.on('emitMd', (event, data) => {
   noteStr.value = md.render(data);
   console.log(noteStr.value);
