@@ -1,5 +1,5 @@
 import { app, ipcMain } from 'electron';
-import { getMd, setScript, getScript } from './index'
+import { getMd, setScript, getScript, writeFile } from './index'
 
 // 获取脚本
 ipcMain.on('getScript', async (event, data) => {
@@ -29,4 +29,9 @@ ipcMain.on('addScript', async (event, data) => {
 ipcMain.on('relaunch', async () => {
   app.relaunch();
   app.exit();
+});
+
+// 保存笔记
+ipcMain.on('saveNote', async (event, str) => {
+  writeFile('./build/main/static/note.md', str)
 });

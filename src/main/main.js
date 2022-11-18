@@ -28,15 +28,6 @@ app.whenReady().then(() => {
     eval(e.content)
   })
 
-  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        'Content-Security-Policy': ['script-src \'self\'']
-      }
-    })
-  })
-
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.

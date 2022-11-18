@@ -1,8 +1,8 @@
 <template>
   <div class="xl-script">
     <div class="script-btn">
-      <el-button type="primary" @click="dialogVisible = true">新增脚本</el-button>
-      <el-button type="danger" @click="ipcRenderer.send('relaunch');">重启应用</el-button>
+      <el-button type="primary" circle @click="dialogVisible = true"><i class="iconfont icon-bianji"></i></el-button>
+      <el-button type="primary" circle @click="ipcRenderer.send('relaunch');"><i class="iconfont icon-chongqi"></i></el-button>
     </div>
     <div class="script-list">
       <el-table :data="scriptData" stripe style="width: 100%">
@@ -30,10 +30,10 @@
         <el-form-item label="脚本内容">
           <el-input type="textarea" :rows="8" resize="none" v-model="script.content"></el-input>
         </el-form-item>
-        <el-form-item>
+        <div style="text-align: center">
           <el-button type="primary" @click="handleSave">保存</el-button>
           <el-button type="primary" plain @click="dialogVisible = false">取消</el-button>
-        </el-form-item>
+        </div>
       </el-form>
     </el-dialog>
   </div>
@@ -66,12 +66,15 @@ const handleSave = () => {
   position: relative;
 }
 .script-btn {
-  margin-bottom: 10px;
   text-align: right;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
 }
 .save-btn {
   position: absolute;
   bottom: 30px;
   right: 30px;
+  z-index: 999;
 }
 </style>

@@ -116,5 +116,8 @@ const ipcRenderer = useIpcRenderer();
       box-sizing: border-box;
     }
   }
+  :deep(.el-scrollbar__view) {
+    height: 100%;
+  }
 }
 </style>
