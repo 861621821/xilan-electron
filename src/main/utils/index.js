@@ -3,9 +3,6 @@ import { join } from 'path';
 import { exec } from 'child_process';
 import { ipcMain } from 'electron';
 import fs from 'fs';
-import Store from 'electron-store';
-
-const store = new Store();
 
 export const readFile = (path) => {
   return new Promise((resolve, reject) => {
@@ -75,15 +72,6 @@ export const openApp = (path) => {
   })
 }
 
-// 获取脚本
-export const getScript = () => {
-  return store.get('script', [])
-}
-// 添加脚本
-export const setScript = (script) => {
-  const res = store.get('script', []);
-  store.set('script', [...res, { ...script, id: Date.now(), status: 0 }]);
-}
 
 // 方法注册到全局
 global.createMessageWindow = createMessageWindow;

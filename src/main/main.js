@@ -1,7 +1,10 @@
-import { app, BrowserWindow, ipcMain, session, globalShortcut, Menu } from 'electron';
+import { app, BrowserWindow, ipcMain, session, globalShortcut, screen } from 'electron';
 import { join } from 'path';
 import { ipcMain } from 'electron';
 import { getScript } from './utils/index';
+import Store from 'electron-store';
+
+const store = new Store();
 
 // 开机启动
 const ex = process.execPath
@@ -22,10 +25,9 @@ app.whenReady().then(() => {
   registerShortcut();
 
   // 读取并执行脚本
-  const script = getScript('script', []);
-  console.log(script);
-  script.map(e => {
-    eval(e.content)
+  const scripts = store.get('script', []);
+  scripts.map(e => {
+    e.status === 1 && eval(e.content)
   })
 
   app.on('activate', function () {
@@ -46,11 +48,15 @@ app.whenReady().then(() => {
 // })
 
 function createWindow() {
+  const { width, height } = screen.getPrimaryDisplay().workArea
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 600,
+    width: 80,
+    height: 80,
+    x: Math.floor(width * 0.92),
+    y: Math.floor(height * 0.88),
     icon: join(__dirname, './static/logo.ico'),
     frame: false,
+    transparent: true,
     resizable: false,
     hasShadow: false,
     webPreferences: {
@@ -62,10 +68,10 @@ function createWindow() {
 
   if (process.env.NODE_ENV === 'development') {
     const rendererPort = process.argv[2];
-    mainWindow.loadURL(`http://localhost:${rendererPort}`);
+    mainWindow.loadURL(`http://localhost:${rendererPort}/#/logo`);
   }
   else {
-    mainWindow.loadFile(join(app.getAppPath(), 'renderer', 'index.html'));
+    mainWindow.loadFile(join(app.getAppPath(), 'renderer', 'index.html/#/logo'));
   }
 }
 

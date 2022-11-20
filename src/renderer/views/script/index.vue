@@ -15,9 +15,9 @@
         </el-table-column>
         <el-table-column label="操作">
           <template #default="{row}">
-            <el-button type="primary" link>启用</el-button>
-            <el-button type="primary" link>停用</el-button>
-            <el-button type="primary" link>删除</el-button>
+            <el-button type="primary" :disabled="row.status === 1" link @click="handleEnable(row)">启用</el-button>
+            <el-button type="primary" :disabled="row.status === -1" link @click="handleStop(row)">停用</el-button>
+            <el-button type="primary" link @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -47,10 +47,26 @@ const { ipcRenderer } = require('electron');
 
 // 获取脚本数据
 const scriptData = ref([]);
-ipcRenderer.send('getScript'); // 向主进程通信
-ipcRenderer.on('emitScript', (event, data) => {
-  scriptData.value = data;
-});
+const getScript = () => {
+  ipcRenderer.send('getScript'); // 向主进程通信
+  ipcRenderer.on('emitScript', (event, data) => {
+    scriptData.value = data;
+  });
+};
+getScript();
+
+const handleEnable = ({ id }) => {
+  ipcRenderer.send('operateScript', { id, type: 'enable' });
+  getScript();
+};
+const handleStop = ({ id }) => {
+  ipcRenderer.send('operateScript', { id, type: 'stop' });
+  getScript();
+};
+const handleDelete = ({ id }) => {
+  ipcRenderer.send('operateScript', { id, type: 'delete' });
+  getScript();
+};
 
 const dialogVisible = ref(false);
 const script = reactive({ title: '', content: '' });

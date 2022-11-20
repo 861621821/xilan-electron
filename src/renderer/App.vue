@@ -1,7 +1,13 @@
 <template>
   <div class="main-warp">
-    <template v-if="route.name !== 'Message'">
-      <div class="menu-bar">
+    <template v-if="route.name === 'Logo'">
+      <router-view />
+    </template>
+    <template v-else-if="route.name === 'Message'">
+      <router-view />
+    </template>
+    <template v-else>
+      <!-- <div class="menu-bar">
         <img src="@img/logo.png" class="logo" alt="" srcset="">
         <i v-for="item in menu" :key="item.path" :class="[item.icon, item.path == route.path ? 'active' : '']" @click="router.push(item.path)"></i>
       </div>
@@ -14,15 +20,13 @@
             <i class="iconfont icon-guanbi1" @click="ipcRenderer.send('hide')"></i>
           </div>
         </div>
-        <el-scrollbar style="flex: 1">
-          <div class="selection">
-            <router-view />
-          </div>
-        </el-scrollbar>
-      </div>
-    </template>
-    <template v-else>
-      <router-view />
+      </div> -->
+
+      <el-scrollbar style="flex: 1">
+        <div class="selection">
+          <router-view />
+        </div>
+      </el-scrollbar>
     </template>
   </div>
 </template>
@@ -45,27 +49,27 @@ const ipcRenderer = useIpcRenderer();
 .main-warp {
   height: 100vh;
   display: flex;
-  .menu-bar {
-    width: 60px;
-    background: #2a2a2a;
-    text-align: center;
-    .logo {
-      width: 40px;
-      height: 40px;
-      margin: 20px auto;
-      display: block;
-    }
-    .iconfont {
-      display: block;
-      font-size: 24px;
-      color: #f2f2f2;
-      cursor: pointer;
-      margin: 5px 0;
-      &.active {
-        color: var(--el-color-primary);
-      }
-    }
-  }
+  // .menu-bar {
+  //   width: 60px;
+  //   background: #2a2a2a;
+  //   text-align: center;
+  //   .logo {
+  //     width: 40px;
+  //     height: 40px;
+  //     margin: 20px auto;
+  //     display: block;
+  //   }
+  //   .iconfont {
+  //     display: block;
+  //     font-size: 24px;
+  //     color: #f2f2f2;
+  //     cursor: pointer;
+  //     margin: 5px 0;
+  //     &.active {
+  //       color: var(--el-color-primary);
+  //     }
+  //   }
+  // }
   .right-box {
     flex: 1;
     display: flex;
@@ -110,7 +114,6 @@ const ipcRenderer = useIpcRenderer();
     height: 100%;
     width: 100%;
     & > div {
-      padding: 10px;
       height: 100%;
       width: 100%;
       box-sizing: border-box;
