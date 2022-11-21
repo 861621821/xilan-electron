@@ -4,6 +4,11 @@ import Store from 'electron-store';
 
 const store = new Store();
 
+ipcMain.on('openPanel', async (event, data) => {
+  const scripts = store.get('script', []);
+  event.sender.send('emitScript', scripts);
+});
+
 // 获取脚本
 ipcMain.on('getScript', async (event, data) => {
   const scripts = store.get('script', []);

@@ -7,7 +7,7 @@
       <router-view />
     </template>
     <template v-else>
-      <!-- <div class="menu-bar">
+      <div class="menu-bar">
         <img src="@img/logo.png" class="logo" alt="" srcset="">
         <i v-for="item in menu" :key="item.path" :class="[item.icon, item.path == route.path ? 'active' : '']" @click="router.push(item.path)"></i>
       </div>
@@ -20,13 +20,12 @@
             <i class="iconfont icon-guanbi1" @click="ipcRenderer.send('hide')"></i>
           </div>
         </div>
-      </div> -->
-
-      <el-scrollbar style="flex: 1">
-        <div class="selection">
-          <router-view />
-        </div>
-      </el-scrollbar>
+        <el-scrollbar style="flex: 1">
+          <div class="selection">
+            <router-view />
+          </div>
+        </el-scrollbar>
+      </div>
     </template>
   </div>
 </template>
@@ -49,34 +48,34 @@ const ipcRenderer = useIpcRenderer();
 .main-warp {
   height: 100vh;
   display: flex;
-  // .menu-bar {
-  //   width: 60px;
-  //   background: #2a2a2a;
-  //   text-align: center;
-  //   .logo {
-  //     width: 40px;
-  //     height: 40px;
-  //     margin: 20px auto;
-  //     display: block;
-  //   }
-  //   .iconfont {
-  //     display: block;
-  //     font-size: 24px;
-  //     color: #f2f2f2;
-  //     cursor: pointer;
-  //     margin: 5px 0;
-  //     &.active {
-  //       color: var(--el-color-primary);
-  //     }
-  //   }
-  // }
+  .menu-bar {
+    width: 60px;
+    background: #2a2a2a;
+    text-align: center;
+    .logo {
+      width: 40px;
+      height: 40px;
+      margin: 20px auto;
+      display: block;
+    }
+    .iconfont {
+      display: block;
+      font-size: 24px;
+      color: #f2f2f2;
+      cursor: pointer;
+      margin: 5px 0;
+      &.active {
+        color: var(--el-color-primary);
+      }
+    }
+  }
   .right-box {
     flex: 1;
     display: flex;
     flex-direction: column;
   }
   .title-bar {
-    // -webkit-app-region: drag;
+    -webkit-app-region: drag;
     height: 50px;
     display: flex;
     align-items: center;

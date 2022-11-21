@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, screen, globalShortcut } from 'electron';
 import { join } from 'path';
 import { exec } from 'child_process';
 import { ipcMain } from 'electron';
@@ -30,6 +30,76 @@ export const getMd = (fileName) => {
     });
   })
 }
+export const createLogoWindow = () => {
+  const { width, height } = screen.getPrimaryDisplay().workArea
+  let win = new BrowserWindow({
+    width: 80,
+    height: 80,
+    x: Math.floor(width * 0.92),
+    y: Math.floor(height * 0.88),
+    icon: join(__dirname, './static/logo.ico'),
+    frame: false,
+    transparent: true,
+    resizable: false,
+    movable: true,
+    hasShadow: false,
+    skipTaskbar: true, // 取消任务栏显示
+    alwaysOnTop: true,
+    webPreferences: {
+      // preload: join(__dirname, 'preload.js'),
+      nodeIntegration: true, // 渲染进程使用Node API
+      contextIsolation: false,
+    }
+  });
+
+  if (process.env.NODE_ENV === 'development') {
+    const rendererPort = process.argv[2];
+    win.loadURL(`http://localhost:${rendererPort}/#/logo`);
+  }
+  else {
+    win.loadFile(join(app.getAppPath(), 'renderer', 'index.html/#/logo'));
+  }
+}
+
+export const createPanelWindow = () => {
+  global.win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    icon: join(__dirname, './static/logo.ico'),
+    frame: false,
+    // transparent: true,
+    resizable: false,
+    hasShadow: false,
+    // skipTaskbar: true, // 取消任务栏显示
+    webPreferences: {
+      // preload: join(__dirname, 'preload.js'),
+      nodeIntegration: true, // 渲染进程使用Node API
+      contextIsolation: false,
+    }
+  });
+
+  if (process.env.NODE_ENV === 'development') {
+    const rendererPort = process.argv[2];
+    win.loadURL(`http://localhost:${rendererPort}`);
+  }
+  else {
+    win.loadFile(join(app.getAppPath(), 'renderer', 'index.html'));
+  }
+}
+
+// 注册快捷键
+export const registerShortcut = () => {
+  // 关闭：mainWindow.close();
+  // 最大化：mainWindow.maximize();
+  // 还原
+  globalShortcut.register('CommandOrControl+Space', () => {
+    global.win.show();
+  })
+  // 最小化
+  globalShortcut.register('Esc', () => {
+    global.win.isFocused() && global.win.hide();
+  })
+}
 
 export const createMessageWindow = (msg = {}, width = 450, height = 260) => {
   let win = new BrowserWindow({
@@ -38,6 +108,7 @@ export const createMessageWindow = (msg = {}, width = 450, height = 260) => {
     frame: false,
     transparent: true,
     resizable: false,
+    skipTaskbar: true, // 取消任务栏显示
     webPreferences: {
       // preload: join(__dirname, 'preload.js'),
       nodeIntegration: true,
