@@ -1,41 +1,46 @@
 <template>
-  <div class="logo-wrap">
-    <img src="@img/logo.png" class="logo" alt="" @click="openPanel">
+  <div class="logo-wrap" @mouseleave="isMini = true">
+    <img src="@img/logo.png" class="logo" alt="" @dblclick="openPanel">
+    <!-- <div class="desc">武汉市洪山区今晚有雨</div> -->
+    <Marquee content="武汉市洪山区今晚有雨，气温18度" :speed="1"></Marquee>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import Marquee from '@/components/Marquee.vue';
 const { ipcRenderer } = require('electron');
-
+const isMini = ref(true);
 const openPanel = () => {
   ipcRenderer.send('openPanel');
 };
 
-// const borderColor = ref('transparent');
-// setInterval(() => {
-//   borderColor.value === 'transparent' ? (borderColor.value = 'var(--el-color-primary)') : (borderColor.value = 'transparent');
-// }, 500);
+const shadow = ref('unset');
+setInterval(() => {
+  // shadow.value === 'unset' ? (shadow.value = '0 0 8px 0 var(--el-color-primary)') : (shadow.value = 'unset');
+}, 500);
 </script>
 
 <style lang="scss" scoped>
 .logo-wrap {
-  // border: 3px solid transparent;
-  // border-color: v-bind(borderColor);
-  height: 70px;
-  width: 70px;
-  border-radius: 50%;
-  overflow: hidden;
-  background: #fff;
+  height: 100px;
+  width: 100px;
+  position: relative;
+  color: var(--el-color-primary);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  transition: border-color 0.2s;
+  overflow: hidden;
 }
 .logo {
   cursor: pointer;
-  height: 90%;
-  width: 90%;
-  // -webkit-app-region: drag;
+  height: 65%;
+  width: 65%;
+  border-radius: 50%;
+  box-shadow: v-bind(shadow);
+  transition: box-shadow 0.2s;
+}
+.desc {
+  white-space: nowrap;
 }
 </style>

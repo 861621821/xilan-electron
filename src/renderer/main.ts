@@ -5,7 +5,7 @@ import './assets/style/index.scss'
 // import 'element-plus/dist/index.css'
 import './assets/style/element.scss'
 import './assets/iconfont/iconfont.css'
-import './assets/utils/index.js'
+import './utils/index.js'
 import router from './router'
 
 import VMdEditor from '@kangc/v-md-editor';

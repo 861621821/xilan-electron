@@ -13,7 +13,6 @@
 import { ref } from 'vue';
 const md = require('markdown-it')();
 const { ipcRenderer } = require('electron');
-
 const isEdit = ref(false);
 
 // 获取记事本

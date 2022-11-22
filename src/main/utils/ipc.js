@@ -1,12 +1,13 @@
-import { app, ipcMain } from 'electron';
-import { getMd, writeFile } from './index'
+import { app, ipcMain, BrowserWindow } from 'electron';
+import { getMd, writeFile, createPanelWindow } from './index'
 import Store from 'electron-store';
 
 const store = new Store();
 
 ipcMain.on('openPanel', async (event, data) => {
-  const scripts = store.get('script', []);
-  event.sender.send('emitScript', scripts);
+  // const wins = BrowserWindow.getAllWindows();
+  // console.log('---:', wins)
+  createPanelWindow()
 });
 
 // 获取脚本

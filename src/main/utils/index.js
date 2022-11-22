@@ -3,6 +3,7 @@ import { join } from 'path';
 import { exec } from 'child_process';
 import { ipcMain } from 'electron';
 import fs from 'fs';
+import http from 'http'
 
 export const readFile = (path) => {
   return new Promise((resolve, reject) => {
@@ -33,10 +34,10 @@ export const getMd = (fileName) => {
 export const createLogoWindow = () => {
   const { width, height } = screen.getPrimaryDisplay().workArea
   let win = new BrowserWindow({
-    width: 80,
-    height: 80,
-    x: Math.floor(width * 0.92),
-    y: Math.floor(height * 0.88),
+    width: 100,
+    height: 100,
+    x: Math.floor(width - 108),
+    y: Math.floor(height - 108),
     icon: join(__dirname, './static/logo.ico'),
     frame: false,
     transparent: true,
@@ -59,9 +60,16 @@ export const createLogoWindow = () => {
   else {
     win.loadFile(join(app.getAppPath(), 'renderer', 'index.html/#/logo'));
   }
+
+  weather()
 }
 
 export const createPanelWindow = () => {
+  console.log('---:', global.win)
+  if (global.win) {
+    global.win.show();
+    return false
+  }
   global.win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -70,13 +78,19 @@ export const createPanelWindow = () => {
     // transparent: true,
     resizable: false,
     hasShadow: false,
-    // skipTaskbar: true, // 取消任务栏显示
+    skipTaskbar: true, // 取消任务栏显示
     webPreferences: {
       // preload: join(__dirname, 'preload.js'),
       nodeIntegration: true, // 渲染进程使用Node API
       contextIsolation: false,
     }
   });
+
+  global.win.on('blur', () => {
+    console.log('---:', 999999)
+    global.win.close();
+    global.win = undefined;
+  })
 
   if (process.env.NODE_ENV === 'development') {
     const rendererPort = process.argv[2];
@@ -93,11 +107,12 @@ export const registerShortcut = () => {
   // 最大化：mainWindow.maximize();
   // 还原
   globalShortcut.register('CommandOrControl+Space', () => {
+    !global.win && createPanelWindow();
     global.win.show();
   })
   // 最小化
   globalShortcut.register('Esc', () => {
-    global.win.isFocused() && global.win.hide();
+    global.win && global.win.isFocused() && global.win.hide();
   })
 }
 
@@ -143,6 +158,21 @@ export const openApp = (path) => {
   })
 }
 
+export const weather = () => {
+  http.get(`http://wgeo.weather.com.cn/index.html?_=${Date.now()}`, res => {
+    res.on('data', data => {
+      const str = data.toString('utf8')
+      const ip = str.substring(47, 56)
+      // http://d1.weather.com.cn/dingzhi/101200101.html?_=1669106089668
+      http.get(`http://www.weather.com.cn`, res => {
+        res.on('data', data => {
+          // console.log(data.toString('utf8'));
+        })
+      })
+    })
+  })
+
+}
 
 // 方法注册到全局
 global.createMessageWindow = createMessageWindow;

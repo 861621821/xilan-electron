@@ -12,14 +12,14 @@
         <i v-for="item in menu" :key="item.path" :class="[item.icon, item.path == route.path ? 'active' : '']" @click="router.push(item.path)"></i>
       </div>
       <div class="right-box" style="flex: 1">
-        <div class="title-bar">
+        <!-- <div class="title-bar">
           <div class="page-title">{{route.meta.title}}</div>
           <div class="drag-area"></div>
           <div class="title-btn">
             <i class="iconfont icon-zuixiaohua" @click="ipcRenderer.send('minimize')"></i>
             <i class="iconfont icon-guanbi1" @click="ipcRenderer.send('hide')"></i>
           </div>
-        </div>
+        </div> -->
         <el-scrollbar style="flex: 1">
           <div class="selection">
             <router-view />
@@ -73,6 +73,7 @@ const ipcRenderer = useIpcRenderer();
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
   .title-bar {
     -webkit-app-region: drag;
