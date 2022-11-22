@@ -5,15 +5,36 @@ import { createLogoWindow, createPanelWindow, registerShortcut } from './utils/i
 
 const store = new Store();
 
-// 开机启动
-// const ex = process.execPath
-// app.setLoginItemSettings({
-//   openAtLogin: true,
-//   path: ex,
-//   args: []
-// })
+const isDevelopment = process.env.NODE_ENV !== "production";
 
-// let mainWindow = null;
+app.on("ready", async () => {
+  if (!isDevelopment) launchAtStartup();
+})
+
+function launchAtStartup() {
+  const appFolder = path.dirname(process.execPath);
+  const updateExe = path.resolve(appFolder, "..", "Update.exe");
+  const exeName = path.basename(process.execPath);
+  if (process.platform === "darwin") {
+    app.setLoginItemSettings({
+      openAtLogin: true,
+      openAsHidden: true
+    });
+  } else {
+    app.setLoginItemSettings({
+      openAtLogin: true,
+      openAsHidden: true,
+      path: updateExe,
+      args: [
+        "--processStart",
+        `"${exeName}"`,
+        "--process-start-args",
+        `"--hidden"`
+      ]
+    });
+  }
+}
+
 app.whenReady().then(() => {
   // 注册通讯
   import('./utils/ipc');

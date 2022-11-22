@@ -60,8 +60,6 @@ export const createLogoWindow = () => {
   else {
     win.loadFile(join(app.getAppPath(), 'renderer', 'index.html/#/logo'));
   }
-
-  weather()
 }
 
 export const createPanelWindow = () => {
@@ -156,22 +154,6 @@ export const openApp = (path) => {
   process.stderr.on('data', data => {
     console.log(data)
   })
-}
-
-export const weather = () => {
-  http.get(`http://wgeo.weather.com.cn/index.html?_=${Date.now()}`, res => {
-    res.on('data', data => {
-      const str = data.toString('utf8')
-      const ip = str.substring(47, 56)
-      // http://d1.weather.com.cn/dingzhi/101200101.html?_=1669106089668
-      http.get(`http://www.weather.com.cn`, res => {
-        res.on('data', data => {
-          // console.log(data.toString('utf8'));
-        })
-      })
-    })
-  })
-
 }
 
 // 方法注册到全局

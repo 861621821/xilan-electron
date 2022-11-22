@@ -1,8 +1,8 @@
 <template>
   <div class="logo-wrap" @mouseleave="isMini = true">
     <img src="@img/logo.png" class="logo" alt="" @dblclick="openPanel">
-    <!-- <div class="desc">武汉市洪山区今晚有雨</div> -->
-    <Marquee content="武汉市洪山区今晚有雨，气温18度" :speed="1"></Marquee>
+    <div class="desc">武汉市洪山区今晚有雨</div>
+    <!-- <Marquee :content="weatherInfo" :speed="1"></Marquee> -->
   </div>
 </template>
 
@@ -19,6 +19,23 @@ const shadow = ref('unset');
 setInterval(() => {
   // shadow.value === 'unset' ? (shadow.value = '0 0 8px 0 var(--el-color-primary)') : (shadow.value = 'unset');
 }, 500);
+
+// 获取天气信息
+const weatherInfo = ref('');
+fetch(`http://m.nmc.cn/rest/position?_=${Date.now()}`)
+  .then((res) => res.json())
+  .then(({ code }) => {
+    console.log(code);
+    fetch(`http://m.nmc.cn/rest/predict/${code}?_=${Date.now()}`)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        const station = res.station.city;
+        const weather = res.detail[0].night.weather.info;
+        console.log(station, weather);
+        weatherInfo.value = station + ' ' + weather;
+      });
+  });
 </script>
 
 <style lang="scss" scoped>

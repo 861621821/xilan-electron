@@ -4,7 +4,7 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 const props = defineProps({
   content: {
     type: [String, Array],
@@ -80,6 +80,10 @@ const animation = () => {
 };
 
 onMounted(() => {
+  animation();
+});
+
+watch('content', () => {
   animation();
 });
 </script>
