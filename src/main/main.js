@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { ipcMain } from 'electron';
 import Store from 'electron-store';
-import { createLogoWindow, createPanelWindow, registerShortcut } from './utils/index'
+import { createLogoWindow, registerShortcut } from './utils/index';
 
 const store = new Store();
 

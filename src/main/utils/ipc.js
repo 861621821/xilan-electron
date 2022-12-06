@@ -1,8 +1,13 @@
 import { app, ipcMain, BrowserWindow } from 'electron';
-import { getMd, writeFile, createPanelWindow } from './index'
-import Store from 'electron-store';
+import { readFile, writeFile, createPanelWindow } from './index'
+import Store from './store';
 
 const store = new Store();
+
+ipcMain.on('setPos', async (event, [nx, ny]) => {
+  const [x, y] = global.logoWin.getPosition();
+  global.logoWin.setBounds({ x: x + nx, y: y + ny, width: 100, height: 100 });
+});
 
 ipcMain.on('openPanel', async (event, data) => {
   // const wins = BrowserWindow.getAllWindows();
@@ -13,13 +18,21 @@ ipcMain.on('openPanel', async (event, data) => {
 // 获取脚本
 ipcMain.on('getScript', async (event, data) => {
   const scripts = store.get('script', []);
+  console.log('---:', scripts)
   event.sender.send('emitScript', scripts);
 });
 
-ipcMain.on('getMd', async (event, fileName) => {
-  const str = await getMd(fileName);
-  event.sender.send('emitMd', str);
+ipcMain.on('readFile', async (event, fileName) => {
+  const content = await readFile(fileName);
+  event.sender.send('file', content);
 });
+
+// 保存文件
+ipcMain.on('writeFile', async (event, { fileName, content }) => {
+  console.log(fileName, content);
+  writeFile(fileName, content)
+});
+
 // 打开提醒弹窗
 ipcMain.on('openMsgBox', async (event, data) => {
   console.log('---:', data)
@@ -32,7 +45,16 @@ ipcMain.on('operateScript', async (event, { id, type, script }) => {
   const scripts = store.get('script', []);
   let newScripts = [];
   if (type === 'add') {
-    newScripts = [...scripts, { ...script, id: Date.now(), status: 0 }];
+    newScripts = [
+      ...scripts,
+      {
+        title: script.title,
+        fileName: script.fs.fileName,
+        id: Date.now(),
+        status: 0
+      }
+    ];
+    writeFile(script.fs.fileName, script.fs.content);
   } else if (type === 'delete') {
     newScripts = scripts.filter(e => e.id !== id)
   } else if (type === 'enable') {
@@ -59,7 +81,3 @@ ipcMain.on('relaunch', async () => {
   app.exit();
 });
 
-// 保存笔记
-ipcMain.on('saveNote', async (event, str) => {
-  writeFile('./build/main/static/note.md', str)
-});

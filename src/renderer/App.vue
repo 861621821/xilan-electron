@@ -8,8 +8,9 @@
     </template>
     <template v-else>
       <div class="menu-bar">
-        <img src="@img/logo.png" class="logo" alt="" srcset="">
-        <i v-for="item in menu" :key="item.path" :class="[item.icon, item.path == route.path ? 'active' : '']" @click="router.push(item.path)"></i>
+        <img src="@img/logo.png" class="logo no-drag" alt="" srcset="">
+        <i v-for="item in menu" :key="item.path" class="no-drag" :class="[item.icon, item.path == route.path ? 'active' : '']"
+          @click="router.push(item.path)"></i>
       </div>
       <div class="right-box" style="flex: 1">
         <!-- <div class="title-bar">
@@ -48,22 +49,31 @@ const ipcRenderer = useIpcRenderer();
 .main-warp {
   height: 100vh;
   display: flex;
+  flex-direction: column;
+  .no-drag {
+    -webkit-app-region: no-drag;
+  }
   .menu-bar {
-    width: 60px;
+    -webkit-app-region: drag;
+    height: 60px;
     background: #2a2a2a;
     text-align: center;
+    display: flex;
+    align-items: center;
     .logo {
       width: 40px;
       height: 40px;
-      margin: 20px auto;
+      margin: 0 20px;
       display: block;
+      border-radius: 2px;
+      -webkit-user-drag: none;
     }
     .iconfont {
       display: block;
       font-size: 24px;
       color: #f2f2f2;
       cursor: pointer;
-      margin: 5px 0;
+      margin: 0 15px;
       &.active {
         color: var(--el-color-primary);
       }
@@ -74,6 +84,7 @@ const ipcRenderer = useIpcRenderer();
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    padding-right: 3px;
   }
   .title-bar {
     -webkit-app-region: drag;

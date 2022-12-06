@@ -1,7 +1,7 @@
 <template>
-  <div class="logo-wrap" @mouseleave="isMini = true">
+  <div class="logo-wrap" ref="El" @mousedown="handleDragStart" @mouseup="handleDragEnd" @mouseleave="handleDragEnd">
     <img src="@img/logo.png" class="logo" alt="" @dblclick="openPanel">
-    <div class="desc">武汉市洪山区今晚有雨</div>
+    <div class="desc">{{weatherInfo}}</div>
     <!-- <Marquee :content="weatherInfo" :speed="1"></Marquee> -->
   </div>
 </template>
@@ -36,6 +36,22 @@ fetch(`http://m.nmc.cn/rest/position?_=${Date.now()}`)
         weatherInfo.value = station + ' ' + weather;
       });
   });
+
+// 拖拽
+const El = ref(null);
+let x = 0,
+  y = 0;
+const moveHandle = (e) => {
+  ipcRenderer.send('setPos', [e.clientX - x, e.clientY - y]);
+};
+const handleDragStart = (e) => {
+  x = e.clientX;
+  y = e.clientY;
+  El.value.addEventListener('mousemove', moveHandle);
+};
+const handleDragEnd = (e) => {
+  El.value.removeEventListener('mousemove', moveHandle);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -56,6 +72,7 @@ fetch(`http://m.nmc.cn/rest/position?_=${Date.now()}`)
   border-radius: 50%;
   box-shadow: v-bind(shadow);
   transition: box-shadow 0.2s;
+  -webkit-user-drag: none;
 }
 .desc {
   white-space: nowrap;

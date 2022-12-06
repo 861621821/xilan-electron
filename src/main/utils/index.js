@@ -5,35 +5,26 @@ import { ipcMain } from 'electron';
 import fs from 'fs';
 import http from 'http'
 
-export const readFile = (path) => {
+export const writeFile = (fileName, content) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(path, { flag: 'r', encoding: 'utf-8' }, (err, data) => {
-      if (err) { reject('文件读取出错'); }
-      resolve(data);
-    });
-  })
-}
-
-export const writeFile = (path, str) => {
-  return new Promise((resolve, reject) => {
-    fs.writeFile(path, str, (err) => {
+    fs.writeFile(`./build/main/static/${fileName}`, content, (err) => {
       if (err) { reject('文件写入出错'); }
     });
   })
 }
 
-// 获取md文件
-export const getMd = (fileName) => {
+// 获取文件
+export const readFile = (fileName) => {
   return new Promise((resolve, reject) => {
-    fs.readFile(`./build/main/static/${fileName}.md`, { flag: 'r', encoding: 'utf-8' }, (err, data) => {
-      if (err) { reject('文件读取出错'); }
+    fs.readFile(`./build/main/static/${fileName}`, { flag: 'r', encoding: 'utf-8' }, (err, data) => {
+      if (err) { resolve(''); }
       resolve(data);
     });
   })
 }
 export const createLogoWindow = () => {
   const { width, height } = screen.getPrimaryDisplay().workArea
-  let win = new BrowserWindow({
+  global.logoWin = new BrowserWindow({
     width: 100,
     height: 100,
     x: Math.floor(width - 108),
@@ -55,28 +46,27 @@ export const createLogoWindow = () => {
 
   if (process.env.NODE_ENV === 'development') {
     const rendererPort = process.argv[2];
-    win.loadURL(`http://localhost:${rendererPort}/#/logo`);
+    global.logoWin.loadURL(`http://localhost:${rendererPort}/#/logo`);
   }
   else {
-    win.loadFile(join(app.getAppPath(), 'renderer', 'index.html/#/logo'));
+    global.logoWin.loadFile(join(app.getAppPath(), 'renderer', 'index.html/#/logo'));
   }
 }
 
 export const createPanelWindow = () => {
-  console.log('---:', global.win)
   if (global.win) {
     global.win.show();
     return false
   }
   global.win = new BrowserWindow({
     width: 800,
-    height: 600,
+    height: 495,
     icon: join(__dirname, './static/logo.ico'),
     frame: false,
     // transparent: true,
     resizable: false,
     hasShadow: false,
-    skipTaskbar: true, // 取消任务栏显示
+    // skipTaskbar: true, // 取消任务栏显示
     webPreferences: {
       // preload: join(__dirname, 'preload.js'),
       nodeIntegration: true, // 渲染进程使用Node API
@@ -84,18 +74,18 @@ export const createPanelWindow = () => {
     }
   });
 
-  global.win.on('blur', () => {
-    console.log('---:', 999999)
-    global.win.close();
-    global.win = undefined;
-  })
+  // 市区焦点 关闭窗口
+  // global.win.on('blur', () => {
+  //   global.win.close();
+  //   global.win = undefined;
+  // })
 
   if (process.env.NODE_ENV === 'development') {
     const rendererPort = process.argv[2];
-    win.loadURL(`http://localhost:${rendererPort}`);
+    global.win.loadURL(`http://localhost:${rendererPort}`);
   }
   else {
-    win.loadFile(join(app.getAppPath(), 'renderer', 'index.html'));
+    global.win.loadFile(join(app.getAppPath(), 'renderer', 'index.html'));
   }
 }
 
@@ -122,6 +112,7 @@ export const createMessageWindow = (msg = {}, width = 450, height = 260) => {
     transparent: true,
     resizable: false,
     skipTaskbar: true, // 取消任务栏显示
+    alwaysOnTop: true,
     webPreferences: {
       // preload: join(__dirname, 'preload.js'),
       nodeIntegration: true,

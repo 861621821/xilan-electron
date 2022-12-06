@@ -17,13 +17,13 @@ const isEdit = ref(false);
 
 // 获取记事本
 const noteStr = ref('');
-ipcRenderer.send('getMd', 'note'); // 向主进程通信
-ipcRenderer.on('emitMd', (event, data) => {
+ipcRenderer.send('readFile', 'note.md'); // 向主进程通信
+ipcRenderer.on('file', (event, data) => {
   noteStr.value = data;
 });
 
 const handleSave = () => {
-  ipcRenderer.send('saveNote', noteStr.value);
+  ipcRenderer.send('writeFile', { fileName: 'note.md', content: noteStr.value });
   setTimeout(() => {
     isEdit.value = false;
   });
