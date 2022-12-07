@@ -1,7 +1,7 @@
 <template>
   <div class="xl-script">
     <div class="script-btn">
-      <el-button type="primary" circle @click="dialogVisible = true"><i class="iconfont icon-daoru1"></i></el-button>
+      <el-button type="primary" circle @click="dialogVisible = true"><i class="iconfont icon-daoru"></i></el-button>
       <el-button type="primary" circle @click="ipcRenderer.send('relaunch');"><i class="iconfont icon-chongqi"></i></el-button>
     </div>
     <div class="script-list">
@@ -46,19 +46,14 @@
 
 <script setup>
 import { ref, reactive } from 'vue';
-// import { useIpcRenderer } from '@vueuse/electron';
 const { ipcRenderer } = require('electron');
-// const ipcRenderer = useIpcRenderer();
 
 // 获取脚本数据
 const scriptData = ref([]);
-const getScript = () => {
-  ipcRenderer.send('getScript'); // 向主进程通信
-  ipcRenderer.on('emitScript', (event, data) => {
-    scriptData.value = data;
-  });
-};
-getScript();
+ipcRenderer.send('getScript'); // 向主进程通信
+ipcRenderer.on('emitScript', (event, data) => {
+  scriptData.value = data;
+});
 
 const handleUpdate = ({ id }) => {};
 
@@ -80,7 +75,6 @@ const dialogVisible = ref(false);
 const script = reactive({ title: '', fileList: [] });
 
 const handleSave = async () => {
-  console.log(script);
   const fileToText = (file) => {
     return new Promise((r) => {
       const reader = new FileReader();
@@ -92,7 +86,6 @@ const handleSave = async () => {
   };
   const fileName = script.fileList[0].name;
   const content = await fileToText(script.fileList[0].raw);
-  console.log('---:', fileName, content);
   // ipcRenderer.send('addScript', JSON.stringify(script)); // 向主进程通信
   ipcRenderer.send('operateScript', { id: null, type: 'add', script: { title: script.title, fs: { fileName, content } } });
   dialogVisible.value = false;

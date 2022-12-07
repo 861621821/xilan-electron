@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 1950526 */
-  src: url('iconfont.woff2?t=1670313662096') format('woff2'),
-       url('iconfont.woff?t=1670313662096') format('woff'),
-       url('iconfont.ttf?t=1670313662096') format('truetype');
+  src: url('iconfont.woff2?t=1670382657664') format('woff2'),
+       url('iconfont.woff?t=1670382657664') format('woff'),
+       url('iconfont.ttf?t=1670382657664') format('truetype');
 }
 
 .iconfont {
@@ -13,8 +13,8 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-daoru1:before {
-  content: "\e60e";
+.icon-daoru:before {
+  content: "\e67d";
 }
 
 .icon-queren:before {

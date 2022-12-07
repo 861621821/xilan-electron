@@ -1,9 +1,7 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { ipcMain } from 'electron';
-import Store from 'electron-store';
-import { createLogoWindow, registerShortcut } from './utils/index';
-
-const store = new Store();
+import { createLogoWindow, registerShortcut, readFile } from './utils/index';
+import { getStore } from './utils/store';
 
 const isDevelopment = process.env.NODE_ENV !== "production";
 
@@ -35,19 +33,22 @@ function launchAtStartup() {
   }
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   // 注册通讯
   import('./utils/ipc');
-  // import('./js/executeScript');
   // 创建窗口
   createLogoWindow();
   // 注册快捷键
   registerShortcut();
 
   // 读取并执行脚本
-  const scripts = store.get('script', []);
-  scripts.map(e => {
-    e.status === 1 && eval(e.content)
+  const scripts = await getStore('script', []);
+  scripts.map(async e => {
+    if (e.status === 1) {
+      const fileName = e.fileName;
+      const res = await readFile('script/' + fileName);
+      eval(res);
+    }
   })
 
   app.on('activate', function () {

@@ -3,12 +3,12 @@ import { join } from 'path';
 import { exec } from 'child_process';
 import { ipcMain } from 'electron';
 import fs from 'fs';
-import http from 'http'
 
 export const writeFile = (fileName, content) => {
   return new Promise((resolve, reject) => {
     fs.writeFile(`./build/main/static/${fileName}`, content, (err) => {
-      if (err) { reject('文件写入出错'); }
+      if (err) reject('文件写入出错')
+      else resolve(true)
     });
   })
 }
@@ -17,8 +17,8 @@ export const writeFile = (fileName, content) => {
 export const readFile = (fileName) => {
   return new Promise((resolve, reject) => {
     fs.readFile(`./build/main/static/${fileName}`, { flag: 'r', encoding: 'utf-8' }, (err, data) => {
-      if (err) { resolve(''); }
-      resolve(data);
+      if (err) resolve('')
+      else resolve(data);
     });
   })
 }
@@ -38,9 +38,9 @@ export const createLogoWindow = () => {
     skipTaskbar: true, // 取消任务栏显示
     alwaysOnTop: true,
     webPreferences: {
-      // preload: join(__dirname, 'preload.js'),
+      // preload: join(__dirname, '../preload.js'),
       nodeIntegration: true, // 渲染进程使用Node API
-      contextIsolation: false,
+      contextIsolation: false
     }
   });
 
@@ -54,11 +54,11 @@ export const createLogoWindow = () => {
 }
 
 export const createPanelWindow = () => {
-  if (global.win) {
-    global.win.show();
+  if (global.window) {
+    global.window.show();
     return false
   }
-  global.win = new BrowserWindow({
+  global.window = new BrowserWindow({
     width: 800,
     height: 495,
     icon: join(__dirname, './static/logo.ico'),
@@ -66,26 +66,26 @@ export const createPanelWindow = () => {
     // transparent: true,
     resizable: false,
     hasShadow: false,
-    // skipTaskbar: true, // 取消任务栏显示
+    skipTaskbar: true, // 取消任务栏显示
     webPreferences: {
-      // preload: join(__dirname, 'preload.js'),
+      // preload: join(__dirname, '../preload.js'),
       nodeIntegration: true, // 渲染进程使用Node API
-      contextIsolation: false,
+      contextIsolation: false
     }
   });
 
-  // 市区焦点 关闭窗口
-  // global.win.on('blur', () => {
-  //   global.win.close();
-  //   global.win = undefined;
-  // })
+  // 失去焦点 关闭窗口
+  global.window.on('blur', () => {
+    global.window.close();
+    global.window = null;
+  })
 
   if (process.env.NODE_ENV === 'development') {
     const rendererPort = process.argv[2];
-    global.win.loadURL(`http://localhost:${rendererPort}`);
+    global.window.loadURL(`http://localhost:${rendererPort}`);
   }
   else {
-    global.win.loadFile(join(app.getAppPath(), 'renderer', 'index.html'));
+    global.window.loadFile(join(app.getAppPath(), 'renderer', 'index.html'));
   }
 }
 
@@ -95,17 +95,17 @@ export const registerShortcut = () => {
   // 最大化：mainWindow.maximize();
   // 还原
   globalShortcut.register('CommandOrControl+Space', () => {
-    !global.win && createPanelWindow();
-    global.win.show();
+    !global.window && createPanelWindow();
+    global.window.show();
   })
   // 最小化
   globalShortcut.register('Esc', () => {
-    global.win && global.win.isFocused() && global.win.hide();
+    global.window && global.window.isFocused() && global.window.hide();
   })
 }
 
 export const createMessageWindow = (msg = {}, width = 450, height = 260) => {
-  let win = new BrowserWindow({
+  global.messageWindow = new BrowserWindow({
     width,
     height,
     frame: false,
@@ -114,7 +114,7 @@ export const createMessageWindow = (msg = {}, width = 450, height = 260) => {
     skipTaskbar: true, // 取消任务栏显示
     alwaysOnTop: true,
     webPreferences: {
-      // preload: join(__dirname, 'preload.js'),
+      // preload: join(__dirname, '../preload.js'),
       nodeIntegration: true,
       contextIsolation: false
     }
@@ -122,14 +122,14 @@ export const createMessageWindow = (msg = {}, width = 450, height = 260) => {
 
   if (process.env.NODE_ENV === 'development') {
     const rendererPort = process.argv[2];
-    win.loadURL(`http://localhost:${rendererPort}/#/message`);
+    global.messageWindow.loadURL(`http://localhost:${rendererPort}/#/message`);
   }
   else {
-    win.loadFile(join(app.getAppPath(), 'renderer', 'index.html/#/message'));
+    global.messageWindow.loadFile(join(app.getAppPath(), 'renderer', 'index.html/#/message'));
   }
   // 向渲染进程发送消息内容
-  win.on('ready-to-show', () => {
-    win.webContents.send('emitMsg', msg)
+  global.messageWindow.on('ready-to-show', () => {
+    global.messageWindow.webContents.send('emitMsg', msg)
   })
 }
 

@@ -1,11 +1,10 @@
 <template>
   <div class="xl-msg-warp">
     <div class="xl-msg">
-      <div class="xl-msg-title"><i class="iconfont icon-shouye"></i>{{msg.title}}</div>
+      <div class="xl-msg-title"></div>
       <div class="xl-msg-body">{{msg.content}}</div>
       <div class="xl-msg-btn">
-        <el-button type="primary">关闭</el-button>
-        <el-button>确定</el-button>
+        <el-button type="primary" v-for="(btn, i) in msg.btn" :key="i" @click="handleClick(btn)">{{btn.text}}</el-button>
       </div>
     </div>
   </div>
@@ -13,16 +12,16 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useIpcRenderer } from '@vueuse/electron';
-// const ipcRenderer = useIpcRenderer();
 const { ipcRenderer } = require('electron');
 
 const msg = ref({});
 ipcRenderer.on('emitMsg', (event, data) => {
   msg.value = data;
-  console.log('test', msg);
 });
-const today = ref(new Date().toLocaleString().split(' ')[0]);
+
+const handleClick = (btn) => {
+  ipcRenderer.send('msgBtnClick', JSON.stringify(btn)); // 向主进程通信
+};
 </script>
 
 <style lang="scss" scoped>
@@ -39,15 +38,17 @@ const today = ref(new Date().toLocaleString().split(' ')[0]);
   background: #fff;
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
   position: relative;
+  color: var(--el-color-primary);
   .xl-msg-title {
     text-align: center;
     font-weight: 600;
     font-size: 20px;
     line-height: 2.2;
+    min-height: 20px;
     -webkit-app-region: drag;
     .iconfont {
       font-size: 20px;
-      margin-right: 5px;
+      margin-right: 8px;
     }
   }
   .xl-msg-body {

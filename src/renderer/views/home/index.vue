@@ -11,7 +11,6 @@
 
 <script setup>
 import { ref } from 'vue';
-const md = require('markdown-it')();
 const { ipcRenderer } = require('electron');
 const isEdit = ref(false);
 
@@ -21,7 +20,6 @@ ipcRenderer.send('readFile', 'note.md'); // 向主进程通信
 ipcRenderer.on('file', (event, data) => {
   noteStr.value = data;
 });
-
 const handleSave = () => {
   ipcRenderer.send('writeFile', { fileName: 'note.md', content: noteStr.value });
   setTimeout(() => {
