@@ -22,20 +22,25 @@ setInterval(() => {
 
 // 获取天气信息
 const weatherInfo = ref('');
-fetch(`http://m.nmc.cn/rest/position?_=${Date.now()}`)
-  .then((res) => res.json())
-  .then(({ code }) => {
-    console.log(code);
-    fetch(`http://m.nmc.cn/rest/predict/${code}?_=${Date.now()}`)
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res);
-        const station = res.station.city;
-        const weather = res.detail[0].night.weather.info;
-        console.log(station, weather);
-        weatherInfo.value = station + ' ' + weather;
-      });
-  });
+const getWeatherInfo = () => {
+  fetch(`http://m.nmc.cn/rest/position?_=${Date.now()}`)
+    .then((res) => res.json())
+    .then(({ code }) => {
+      console.log(code);
+      fetch(`http://m.nmc.cn/rest/predict/${code}?_=${Date.now()}`)
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res);
+          const station = res.station.city;
+          const weather = res.detail[0].night.weather.info;
+          console.log(station, weather);
+          weatherInfo.value = station + ' ' + weather;
+        });
+    });
+  return getWeatherInfo;
+};
+
+setInterval(getWeatherInfo(), 5 * 60000);
 
 // 拖拽
 const El = ref(null);

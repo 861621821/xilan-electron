@@ -17,7 +17,10 @@ export const writeFile = (fileName, content) => {
 export const readFile = (fileName) => {
   return new Promise((resolve, reject) => {
     fs.readFile(`./build/main/static/${fileName}`, { flag: 'r', encoding: 'utf-8' }, (err, data) => {
-      if (err) resolve('')
+      if (err) {
+        resolve('');
+        fs.writeFile(`./build/main/static/${fileName}`, '', (err) => { })
+      }
       else resolve(data);
     });
   })
@@ -25,19 +28,20 @@ export const readFile = (fileName) => {
 export const createLogoWindow = () => {
   const { width, height } = screen.getPrimaryDisplay().workArea
   global.logoWin = new BrowserWindow({
-    width: 100,
-    height: 100,
-    x: Math.floor(width - 108),
-    y: Math.floor(height - 108),
+    // width: 100,
+    // height: 100,
+    // x: Math.floor(width - 108),
+    // y: Math.floor(height - 108),
     icon: join(__dirname, './static/logo.ico'),
     frame: false,
-    transparent: true,
+    // transparent: true,
     resizable: false,
     movable: true,
     hasShadow: false,
-    skipTaskbar: true, // 取消任务栏显示
-    alwaysOnTop: true,
+    // skipTaskbar: true, // 取消任务栏显示
+    // alwaysOnTop: true,
     webPreferences: {
+      // webSecurity: false,
       // preload: join(__dirname, '../preload.js'),
       nodeIntegration: true, // 渲染进程使用Node API
       contextIsolation: false
@@ -49,7 +53,14 @@ export const createLogoWindow = () => {
     global.logoWin.loadURL(`http://localhost:${rendererPort}/#/logo`);
   }
   else {
-    global.logoWin.loadFile(join(app.getAppPath(), 'renderer', 'index.html/#/logo'));
+    // global.logoWin.loadFile(join(app.getAppPath(), 'renderer', 'index.html/#/logo'));
+    global.logoWin.loadURL(
+      url.format({
+        pathname: join(app.getAppPath(), 'renderer', 'index.html/#/logo'),
+        protocol: "file:",
+        slashes: true
+      })
+    )
   }
 }
 
@@ -68,6 +79,7 @@ export const createPanelWindow = () => {
     hasShadow: false,
     skipTaskbar: true, // 取消任务栏显示
     webPreferences: {
+      webSecurity: false,
       // preload: join(__dirname, '../preload.js'),
       nodeIntegration: true, // 渲染进程使用Node API
       contextIsolation: false
@@ -114,6 +126,7 @@ export const createMessageWindow = (msg = {}, width = 450, height = 260) => {
     skipTaskbar: true, // 取消任务栏显示
     alwaysOnTop: true,
     webPreferences: {
+      webSecurity: false,
       // preload: join(__dirname, '../preload.js'),
       nodeIntegration: true,
       contextIsolation: false
